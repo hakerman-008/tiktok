@@ -23,7 +23,7 @@ app.get('/kshitiz', async (req, res) => {
       sort_type: '0'
     },
     headers: {
-      'X-RapidAPI-Key': '0820ec24afmsh10d1bef860c3651p10e3f6jsn715a93754ace',
+      'X-RapidAPI-Key': '719775e815msh65471c929a0203bp10fe44jsndcb70c04bc42',
       'X-RapidAPI-Host': 'tiktok-scraper7.p.rapidapi.com'
     }
   };
