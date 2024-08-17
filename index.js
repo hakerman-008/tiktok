@@ -2,40 +2,32 @@ const express = require('express');
 const axios = require('axios');
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
+app.use(express.json());
+
+// Endpoint to fetch data from the new TikTok API and extract play URLs
 app.get('/kshitiz', async (req, res) => {
-  const userKeyword = req.query.keyword;
+    try {
+        const keyword = req.query.keyword; 
 
-  if (!userKeyword) {
-    return res.status(400).json({ error: 'Missing keyword parameter' });
-  }
+        // Fetch data from the new TikTok API
+        const response = await axios.get(`https://api.shannmoderz.xyz/search/tiktok?query=${keyword}`);
 
-  const options = {
-    method: 'GET',
-    url: 'https://apichatbot.sumiproject.io.vn/tiktok',
-    params: {
-      search: userKeyword
+        // Extract no_watermark video URL
+        const videoData = response.data.result;
+        const playUrls = [{
+            title: videoData.title,
+            videoUrl: videoData.no_watermark
+        }];
+
+        res.json(playUrls);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
-
-  try {
-    const response = await axios.request(options);
-
-    const videos = response.data.data.videos.map((video) => {
-      return {
-        title: video.title,
-        videoUrl: video.play
-      };
-    });
-
-    res.json(videos);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
